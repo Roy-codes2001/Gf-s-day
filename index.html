@@ -108,7 +108,7 @@
     </div>
     <p id="ratingMessage"></p>
 
-    <button id="startQuiz">Take BTS Quiz</button>
+    <button id="startQuiz">Take Narcissistic Boyfriend Quiz</button>
 
     <div id="quizContainer"></div>
     <div id="result"></div>
@@ -182,16 +182,16 @@
         }
 
         const quizQuestions = [
-            { question: "What does BTS stand for?", answer: "Bangtan Sonyeondan" },
-            { question: "In which year did BTS debut?", answer: "2013" },
-            { question: "Who is the leader of BTS?", answer: "RM" },
-            { question: "What is the fandom name of BTS?", answer: "ARMY" },
-            { question: "Which BTS member is known as the 'Golden Maknae'?", answer: "Jungkook" },
-            { question: "What is the title of BTS's first English single?", answer: "Dynamite" },
-            { question: "Which BTS member is the main dancer?", answer: "J-Hope" },
-            { question: "What is the name of BTS's debut single?", answer: "No More Dream" },
-            { question: "Which BTS album features the song 'Spring Day'?", answer: "You Never Walk Alone" },
-            { question: "What is the birth name of V?", answer: "Kim Taehyung" }
+            { question: "How much does your bf love you? (1-10)", answer: "10" },
+            { question: "In which year was your bf born?", answer: "2001" },
+            { question: "How handsome is your bf? (1-10)", answer: "10" },
+            { question: "How cute is your bf? (1-10)", answer: "10" },
+            { question: "What does your bf love doing? Travel, Sex, or Both", answer: "Both" },
+            { question: "What is the surname of your bf?", answer: "Basu Roy" },
+            { question: "What is your boyfriend known as in college?", answer: "Neel" },
+            { question: "Does your boyfriend love? (y/n)", answer: "y" },
+            { question: "Does your bf sleep at night? (y/n)", answer: "n" },
+            { question: "Do you love your bf? (y/n)", answer: "y" }
         ];
 
         let currentQuestion = 0;
@@ -228,10 +228,19 @@
         }
 
         function showResult() {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `You scored ${score} out of ${quizQuestions.length}!`;
-            document.getElementById('quizContainer').style.display = 'none';
-        }
+    const resultDiv = document.getElementById('result');
+    let message;
+
+    if (score >= 6) {
+        message = `Great job! You scored ${score} out of ${quizQuestions.length}! You really love your narcissistic `;
+    } else {
+        message = `You scored ${score} out of ${quizQuestions.length}. Don't worry, you'll get to know him better!`;
+    }
+
+    resultDiv.innerHTML = message;
+    document.getElementById('quizContainer').style.display = 'none';
+}
+
     </script>
 </body>
 </html>
