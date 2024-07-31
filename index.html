@@ -55,6 +55,32 @@
         #ratingSlider {
             width: 80%;
             max-width: 300px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: purple;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            border-radius: 5px;
+        }
+        #ratingSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid purple;
+        }
+        #ratingSlider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid purple;
         }
         #quizContainer {
             display: none;
@@ -75,8 +101,8 @@
 
     <div id="ratingContainer">
         <p>Rate yourself (1-10):</p>
-        <input type="range" id="ratingSlider" min="1" max="10" value="10">
-        <p id="ratingValue">10</p>
+        <input type="range" id="ratingSlider" min="1" max="10" value="5">
+        <p id="ratingValue">5</p>
         <button id="submitRating">Submit Rating</button>
     </div>
     <p id="ratingMessage"></p>
@@ -87,48 +113,70 @@
     <div id="result"></div>
 
     <script>
+        let photoQueue = [];
+        const photos = [
+            "1.jpeg",
+            "2.jpeg",
+            "3.jpeg",
+            "4.jpeg",
+            "5.jpeg",
+            "6.jpeg"  
+        ];
+        const messages = [
+            "You're the best girlfriend ever!",
+            "I'm so lucky to have you in my life!",
+            "You make every day brighter!",
+            "I love you more than words can express!",
+            "You're my favorite person in the whole world!"
+        ];
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('showButton').addEventListener('click', showMessageAndPhoto);
             document.getElementById('ratingSlider').addEventListener('input', updateRatingValue);
             document.getElementById('submitRating').addEventListener('click', submitRating);
             document.getElementById('startQuiz').addEventListener('click', startQuiz);
+
+            // Display a random photo and message on page load
+            showMessageAndPhoto();
         });
 
         function showMessageAndPhoto() {
-            const messages = [
-                "You're the best girlfriend ever!",
-                "I'm so lucky to have you in my life!",
-                "You make every day brighter!",
-                "I love you more than words can express!",
-                "You're my favorite person in the whole world!"
-            ];
-            const photos = [
-                "1.jpeg",
-                "2.jpeg",
-                "3.jpeg",
-                "4.jpeg",
-                "5.jpeg"
-            ];
-            const randomIndex = Math.floor(Math.random() * messages.length);
-            document.getElementById('message').textContent = messages[randomIndex];
+            if (photoQueue.length === 0) {
+                // Shuffle the photos array and create a queue
+                photoQueue = photos.slice();
+                for (let i = photoQueue.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [photoQueue[i], photoQueue[j]] = [photoQueue[j], photoQueue[i]];
+                }
+            }
+
+            // Get the next photo from the queue
+            const photoSrc = photoQueue.shift();
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+            document.getElementById('message').textContent = randomMessage;
             const photo = document.getElementById('photo');
             photo.style.opacity = 0;
             setTimeout(() => {
-                photo.src = photos[randomIndex];
+                photo.src = photoSrc;
                 photo.style.display = 'block';
                 photo.style.opacity = 1;
             }, 500);
         }
 
         function updateRatingValue() {
-            document.getElementById('ratingValue').textContent = this.value;
+            const ratingValue = document.getElementById('ratingSlider').value;
+            document.getElementById('ratingValue').textContent = ratingValue;
         }
 
         function submitRating() {
             const rating = document.getElementById('ratingSlider').value;
-            const message = rating < 10 
-                ? "SIKEEE! You haven't seen my girl, she is 10 on 10!" 
-                : "That's right! You're absolutely perfect!";
+            let message;
+            if (rating < 10) {
+                message = "SIKEEE! You haven't seen my girl, she is 10 on 10!";
+            } else {
+                message = "That's right! You're absolutely perfect!";
+            }
             document.getElementById('ratingMessage').textContent = message;
         }
 
