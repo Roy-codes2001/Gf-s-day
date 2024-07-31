@@ -8,13 +8,15 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #ffebee;
+            background: linear-gradient(45deg, #ff9ff3, #74b9ff);
             padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
         h1 {
             color: #e91e63;
         }
-        #message {
+        #message, #ratingMessage {
             font-size: 18px;
             margin: 20px 0;
         }
@@ -25,16 +27,74 @@
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #c2185b;
+        }
+        #photo-container {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            transition: opacity 0.5s;
+        }
+        #ratingContainer {
+            margin: 20px 0;
+        }
+        #ratingSlider {
+            width: 80%;
+            max-width: 300px;
+        }
+        #quizContainer {
+            display: none;
+            background-color: rgba(255,255,255,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <h1>Happy Girlfriend's Day!</h1>
-    <p id="message">Click the button to see a special message!</p>
-    <button onclick="showMessage()">Click Me!</button>
+    <div id="photo-container">
+        <img id="photo" alt="Photo of my girlfriend">
+    </div>
+    <p id="message">Click the button to see a special message and photo!</p>
+    <button id="showButton">Click Me!</button>
+
+    <div id="ratingContainer">
+        <p>Rate yourself (1-10):</p>
+        <input type="range" id="ratingSlider" min="1" max="10" value="10">
+        <p id="ratingValue">10</p>
+        <button id="submitRating">Submit Rating</button>
+    </div>
+    <p id="ratingMessage"></p>
+
+    <button id="startQuiz">Take BTS Quiz</button>
+
+    <div id="quizContainer"></div>
+    <div id="result"></div>
 
     <script>
-        function showMessage() {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('showButton').addEventListener('click', showMessageAndPhoto);
+            document.getElementById('ratingSlider').addEventListener('input', updateRatingValue);
+            document.getElementById('submitRating').addEventListener('click', submitRating);
+            document.getElementById('startQuiz').addEventListener('click', startQuiz);
+        });
+
+        function showMessageAndPhoto() {
             const messages = [
                 "You're the best girlfriend ever!",
                 "I'm so lucky to have you in my life!",
@@ -42,8 +102,86 @@
                 "I love you more than words can express!",
                 "You're my favorite person in the whole world!"
             ];
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            document.getElementById('message').textContent = randomMessage;
+            const photos = [
+                "1.jpeg",
+                "2.jpeg",
+                "3.jpeg",
+                "4.jpeg",
+                "5.jpeg"
+            ];
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            document.getElementById('message').textContent = messages[randomIndex];
+            const photo = document.getElementById('photo');
+            photo.style.opacity = 0;
+            setTimeout(() => {
+                photo.src = photos[randomIndex];
+                photo.style.display = 'block';
+                photo.style.opacity = 1;
+            }, 500);
+        }
+
+        function updateRatingValue() {
+            document.getElementById('ratingValue').textContent = this.value;
+        }
+
+        function submitRating() {
+            const rating = document.getElementById('ratingSlider').value;
+            const message = rating < 10 
+                ? "SIKEEE! You haven't seen my girl, she is 10 on 10!" 
+                : "That's right! You're absolutely perfect!";
+            document.getElementById('ratingMessage').textContent = message;
+        }
+
+        const quizQuestions = [
+            { question: "What does BTS stand for?", answer: "Bangtan Sonyeondan" },
+            { question: "In which year did BTS debut?", answer: "2013" },
+            { question: "Who is the leader of BTS?", answer: "RM" },
+            { question: "What is the fandom name of BTS?", answer: "ARMY" },
+            { question: "Which BTS member is known as the 'Golden Maknae'?", answer: "Jungkook" },
+            { question: "What is the title of BTS's first English single?", answer: "Dynamite" },
+            { question: "Which BTS member is the main dancer?", answer: "J-Hope" },
+            { question: "What is the name of BTS's debut single?", answer: "No More Dream" },
+            { question: "Which BTS album features the song 'Spring Day'?", answer: "You Never Walk Alone" },
+            { question: "What is the birth name of V?", answer: "Kim Taehyung" }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('quizContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion < quizQuestions.length) {
+                const quizContainer = document.getElementById('quizContainer');
+                quizContainer.innerHTML = `
+                    <p>${quizQuestions[currentQuestion].question}</p>
+                    <input type="text" id="answer">
+                    <button onclick="checkAnswer()">Submit Answer</button>
+                `;
+            } else {
+                showResult();
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+            const correctAnswer = quizQuestions[currentQuestion].answer.toLowerCase();
+            if (userAnswer === correctAnswer) {
+                score++;
+            }
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showResult() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `You scored ${score} out of ${quizQuestions.length}!`;
+            document.getElementById('quizContainer').style.display = 'none';
         }
     </script>
 </body>
