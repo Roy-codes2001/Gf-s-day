@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Girlfriend's Day!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffebee;
+            padding: 20px;
+        }
+        h1 {
+            color: #e91e63;
+        }
+        #message {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Happy Girlfriend's Day!</h1>
+    <p id="message">Click the button to see a special message!</p>
+    <button onclick="showMessage()">Click Me!</button>
+
+    <script>
+        function showMessage() {
+            const messages = [
+                "You're the best girlfriend ever!",
+                "I'm so lucky to have you in my life!",
+                "You make every day brighter!",
+                "I love you more than words can express!",
+                "You're my favorite person in the whole world!"
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('message').textContent = randomMessage;
+        }
+    </script>
+</body>
+</html>
